@@ -26,6 +26,9 @@ app.use("/api/chat", protect, proxyWithHeader(process.env.CHAT_SERVICE));
 app.use("/api/agent", protect, proxyWithHeader(process.env.AGENT_SERVICE));
 app.use("/api/billing", protect, proxyWithHeader(process.env.BILLING_SERVICE));
 
+app.get("/health", (req, res) => {
+  res.status(200).send("ok");
+});
 app.get("/api/me", protect, getCurrentUser);
 app.get("/", (req, res) => {
   res.json({ message: "hello from gateway" });

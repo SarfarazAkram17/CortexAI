@@ -9,6 +9,10 @@ const app = express();
 app.use(express.json());
 app.use("/", router);
 
+app.get("/health", (req, res) => {
+  res.status(200).send("ok");
+});
+
 app.get("/", (req, res) => {
   res.json({ message: "hello from chat" });
 });
