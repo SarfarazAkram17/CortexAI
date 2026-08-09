@@ -53,7 +53,7 @@ export const login = async (req, res) => {
 
     return res.status(200).json(user);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({ message: `Login error ${error}` });
   }
 };
@@ -63,7 +63,12 @@ export const logOut = async (req, res) => {
     const sessionId = req.cookies?.session;
     await redis.del(`session-${sessionId}`);
 
-    res.clearCookie("session");
+    res.clearCookie("session", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      path: "/",
+    });
 
     return res.status(200).json({ message: "Logout successfully" });
   } catch (error) {
