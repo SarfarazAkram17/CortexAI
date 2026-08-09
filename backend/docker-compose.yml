@@ -1,0 +1,26 @@
+services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - "9000:9000"   # API port
+      - "9001:9001"   # Console UI
+    environment:
+      MINIO_ROOT_USER: CortexAI
+      MINIO_ROOT_PASSWORD: NHXbOiAVeAu+i2FyVIjMsjaWHGWiY5xmxXCdE9bLg9g
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+
+volumes:
+  redis_data:
+  minio_data:
+
+# updated to use minio

@@ -1,0 +1,136 @@
+services:
+  - type: web
+    name: gateway
+    runtime: docker
+    dockerfilePath: ./backend/gateway/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: FRONTEND_URL
+        fromService: { name: frontend, type: web, property: host }
+      - key: AUTH_SERVICE
+        fromService: { name: auth-service, type: web, property: host }
+      - key: CHAT_SERVICE
+        fromService: { name: chat-service, type: web, property: host }
+      - key: BILLING_SERVICE
+        fromService: { name: billing-service, type: web, property: host }
+      - key: AGENT_SERVICE
+        fromService: { name: agent-service, type: web, property: host }
+      - key: REDIS_URL
+        sync: false
+    plan: free
+
+  - type: web
+    name: auth-service
+    runtime: docker
+    dockerfilePath: ./backend/services/auth/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: PORT
+        value: 8001
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: FIREBASE_SERVICE_ACCOUNT_JSON
+        sync: false
+      - key: NODE_ENV
+        value: production
+    plan: free
+
+  - type: web
+    name: chat-service
+    runtime: docker
+    dockerfilePath: ./backend/services/chat/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: PORT
+        value: 8002
+      - key: MONGODB_URI
+        sync: false
+    plan: free
+
+  - type: web
+    name: agent-service
+    runtime: docker
+    dockerfilePath: ./backend/services/agent/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: PORT
+        value: 8003
+      - key: MONGODB_URI
+        sync: false
+      - key: AUTH_SERVICE
+        fromService: { name: auth-service, type: web, property: host }
+      - key: CHAT_SERVICE
+        fromService: { name: chat-service, type: web, property: host }
+      - key: REDIS_URL
+        sync: false
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: MINIO_ENDPOINT
+        sync: false
+      - key: MINIO_PORT
+        value: 443
+      - key: MINIO_USE_SSL
+        value: "true"
+      - key: MINIO_ACCESS_KEY
+        sync: false
+      - key: MINIO_SECRET_KEY
+        sync: false
+      - key: MINIO_BUCKET
+        sync: false
+    plan: free
+
+  - type: web
+    name: billing-service
+    runtime: docker
+    dockerfilePath: ./backend/services/billing/Dockerfile
+    dockerContext: ./backend
+    envVars:
+      - key: PORT
+        value: 8004
+      - key: MONGODB_URI
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: AUTH_SERVICE
+        fromService: { name: auth-service, type: web, property: host }
+    plan: free
+
+  - type: web
+    name: cortexai-sarfaraz
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    rootDir: ./frontend
+    envVars:
+      - key: VITE_SERVER_URL
+        fromService: { name: gateway, type: web, property: host }
+      - key: VITE_FIREBASE_API_KEY
+        sync: false
+      - key: VITE_FIREBASE_AUTH_DOMAIN
+        sync: false
+      - key: VITE_FIREBASE_PROJECT_ID
+        sync: false
+      - key: VITE_FIREBASE_STORAGE_BUCKET
+        sync: false
+      - key: VITE_FIREBASE_MESSAGING_SENDER_ID
+        sync: false
+      - key: VITE_FIREBASE_APP_ID
+        sync: false
+      - key: VITE_RAZORPAY_KEY_ID
+        sync: false
