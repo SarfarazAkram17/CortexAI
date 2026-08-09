@@ -8,7 +8,7 @@ services:
       - key: PORT
         value: 8000
       - key: FRONTEND_URL
-        fromService: { name: frontend, type: web, property: host }
+        fromService: { name: cortexai-sarfaraz, type: web, property: host }
       - key: AUTH_SERVICE
         fromService: { name: auth-service, type: web, property: host }
       - key: CHAT_SERVICE
