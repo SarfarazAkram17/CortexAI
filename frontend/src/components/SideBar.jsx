@@ -147,6 +147,7 @@ const SideBar = () => {
                 dispatch(setSelectConversation(null));
                 dispatch(setMessages([]));
                 dispatch(setArtifacts([]));
+                if (mobileOpen) setMobileOpen(false);
               }}
               className="flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-colors duration-150 bg-transparent border-none cursor-pointer"
             >
@@ -160,6 +161,7 @@ const SideBar = () => {
                 dispatch(setSelectConversation(null));
                 dispatch(setMessages([]));
                 dispatch(setArtifacts([]));
+                if (mobileOpen) setMobileOpen(false);
               }}
               className="w-full flex items-center justify-center gap-2 text-sm font-medium text-white bg-linear-to-br from-indigo-500 to-violet-700 rounded-xl py-2.5 border-none cursor-pointer hover:opacity-90 transition-opacity duration-150"
             >
@@ -184,7 +186,10 @@ const SideBar = () => {
               return (
                 <div
                   key={i}
-                  onClick={() => dispatch(setSelectConversation(conv))}
+                  onClick={() => {
+                    dispatch(setSelectConversation(conv));
+                    if (mobileOpen) setMobileOpen(false);
+                  }}
                   className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2.5 rounded-[10px] border transition-colors duration-150 ${isActive ? "bg-indigo-500/10 border-indigo-500/18" : "bg-transparent border-transparent"}`}
                 >
                   <div
